@@ -4,6 +4,7 @@ import {
   ArrowLeft, Upload, X, CheckCircle,
   Building2, FileText, TrendingUp, User,
 } from 'lucide-react'
+import { MAX_PHOTOS, postForm, preparePhotos } from '../utils/forms'
 
 /* ── Shared styles ─────────────────────────────────────────── */
 const inputClass =
@@ -105,7 +106,7 @@ function FileDropZone({ files, setFiles }) {
   const addFiles = useCallback(
     (incoming) => {
       const imgs = Array.from(incoming).filter((f) => f.type.startsWith('image/'))
-      setFiles((prev) => [...prev, ...imgs])
+      setFiles((prev) => [...prev, ...imgs].slice(0, MAX_PHOTOS))
     },
     [setFiles],
   )
@@ -147,7 +148,9 @@ function FileDropZone({ files, setFiles }) {
           Glissez-déposez vos photos ici, ou{' '}
           <span className="text-miami-cyan underline underline-offset-2">parcourez vos fichiers</span>
         </p>
-        <p className="text-white/25 text-xs mt-1">JPG, PNG, HEIC — même de simples photos prises au téléphone conviennent</p>
+        <p className="text-white/25 text-xs mt-1">
+          JPG, PNG, HEIC — jusqu&apos;à {MAX_PHOTOS} photos, même prises au téléphone
+        </p>
       </div>
 
       {files.length > 0 && (
@@ -182,18 +185,30 @@ export default function ListProperty({ navigate }) {
     propertyType: '',
     bedrooms: '', bathrooms: '',
     hoaPermission: '', availability: '', furnished: '',
-    listingLink: '', message: '',
+    listingLink: '', message: '', website: '',
   })
   const [files, setFiles]       = useState([])
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending]   = useState(false)
+  const [error, setError]       = useState('')
 
   const set      = (key) => (e)  => setForm((f) => ({ ...f, [key]: e.target.value }))
   const setRadio = (key) => (val) => setForm((f) => ({ ...f, [key]: val }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setSending(true)
+    setError('')
+    try {
+      const photos = await preparePhotos(files)
+      await postForm('/api/list-property', { ...form, photos })
+      setSubmitted(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -520,13 +535,27 @@ export default function ListProperty({ navigate }) {
               transition={{ duration: 0.5 }}
               className="text-center pt-4"
             >
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={form.website}
+                onChange={set('website')}
+                className="hidden"
+              />
+
               <button
                 type="submit"
-                className="btn-primary px-12 py-5 text-lg inline-flex items-center gap-3"
+                disabled={sending}
+                className="btn-primary px-12 py-5 text-lg inline-flex items-center gap-3 disabled:opacity-60 disabled:cursor-wait"
               >
                 <TrendingUp size={20} />
-                Maximiser mes revenus avec Lofty
+                {sending ? 'Envoi en cours…' : 'Maximiser mes revenus avec Lofty'}
               </button>
+
+              {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
 
               {/* Reassurance text */}
               <div className="mt-5 flex items-center justify-center gap-3">

@@ -1,24 +1,38 @@
 import { useRef, useState } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Mail, Phone, MapPin, Send, Instagram, Facebook, MessageSquare, CheckCircle } from 'lucide-react'
+import { postForm } from '../utils/forms'
 
 const inputClass =
   'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/22 outline-none focus:border-miami-cyan/60 transition-colors text-sm'
+
+const emptyForm = { name: '', email: '', phone: '', neighborhood: '', message: '', website: '' }
 
 export default function Contact() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const [form, setForm] = useState({ name: '', email: '', phone: '', neighborhood: '', message: '' })
+  const [form, setForm] = useState(emptyForm)
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSent(true)
-    setTimeout(() => setSent(false), 5000)
-    setForm({ name: '', email: '', phone: '', neighborhood: '', message: '' })
+    setSending(true)
+    setError('')
+    try {
+      await postForm('/api/contact', form)
+      setSent(true)
+      setTimeout(() => setSent(false), 5000)
+      setForm(emptyForm)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -175,10 +189,27 @@ export default function Contact() {
                       />
                     </div>
 
-                    <button type="submit" className="btn-primary w-full py-4 flex items-center justify-center gap-2 text-base">
+                    <input
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      value={form.website}
+                      onChange={set('website')}
+                      className="hidden"
+                    />
+
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      className="btn-primary w-full py-4 flex items-center justify-center gap-2 text-base disabled:opacity-60 disabled:cursor-wait"
+                    >
                       <Send size={17} />
-                      Envoyer le message
+                      {sending ? 'Envoi en cours…' : 'Envoyer le message'}
                     </button>
+
+                    {error && <p className="text-red-400 text-sm text-center">{error}</p>}
                   </motion.form>
                 )}
               </AnimatePresence>
