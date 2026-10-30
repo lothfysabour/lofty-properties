@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #1C1C1C;
+    color: #ffffff;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #121212;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #DCC8AE, #B76E50);
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  /* Glassmorphism */
+  .glass {
+    background: rgba(248, 244, 236, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(220, 200, 174, 0.12);
+    border-radius: 1rem;
+  }
+
+  .glass-dark {
+    background: rgba(18, 18, 18, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(220, 200, 174, 0.08);
+  }
+
+  /* Brand gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #F8F4EC 0%, #DCC8AE 55%, #B76E50 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Brand gradient background */
+  .gradient-miami {
+    background: linear-gradient(135deg, #A83232 0%, #B76E50 100%);
+  }
+
+  /* Primary button */
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #A83232 0%, #B76E50 100%);
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 30px rgba(168, 50, 50, 0.35);
+  }
+
+  /* Outline button */
+  .btn-outline {
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(220, 200, 174, 0.5);
+    color: #DCC8AE;
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    border-color: #DCC8AE;
+    box-shadow: 0 0 22px rgba(220, 200, 174, 0.18);
+    background: rgba(220, 200, 174, 0.06);
+  }
+
+  /* Section label */
+  .section-label {
+    @apply inline-block text-sm font-semibold tracking-widest uppercase mb-4;
+  }
+}
+
+@layer utilities {
+  .text-shadow-glow {
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.45);
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
