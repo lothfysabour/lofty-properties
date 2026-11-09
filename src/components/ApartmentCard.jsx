@@ -4,6 +4,7 @@ import { Star, MapPin, Users, Bed, Bath, Shield, Heart, ExternalLink } from 'luc
 
 const BADGE_STYLES = {
   'Coup de cœur voyageurs': 'from-miami-pink to-miami-orange',
+  'Nouvelle annonce':        'from-miami-cyan to-miami-pink',
   'Mieux notés':            'from-navy-600 to-navy-800',
   'Populaire':              'from-miami-orange to-miami-pink',
   'Meilleur rapport qualité-prix': 'from-navy-600 to-navy-800',
