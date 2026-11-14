@@ -6,6 +6,7 @@ import ApartmentGrid from './components/ApartmentGrid'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ListProperty from './components/ListProperty'
+import BlankPage from './components/BlankPage'
 
 export default function App() {
   const [page, setPage] = useState('home')
@@ -21,6 +22,10 @@ export default function App() {
 
       {page === 'list-property' ? (
         <ListProperty navigate={navigate} />
+      ) : page === 'menage' ? (
+        <BlankPage navigate={navigate} title="Service Ménage" />
+      ) : page === 'partenaires' ? (
+        <BlankPage navigate={navigate} title="Partenaires" />
       ) : (
         <>
           <Hero />

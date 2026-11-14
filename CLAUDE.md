@@ -18,7 +18,7 @@ There is no test runner, no lint script, and no type checker configured in this 
 
 ## Architecture
 
-**Single-page "app" via state, not a router.** `src/App.jsx` holds a `page` state (`'home'` | `'list-property'`) and switches between the home sections and the `ListProperty` page manually — there is no `react-router`. `Navbar` receives `navigate` as a prop and calls it directly; internal home-page navigation (Home/About/Apartments/Contact) uses plain anchor hashes (`#hero`, `#about`, etc.) and `scrollIntoView`, with a special case in `Navbar.handleLink` to first navigate home before scrolling if the user is on a sub-page.
+**Single-page "app" via state, not a router.** `src/App.jsx` holds a `page` state (`'home'` | `'list-property'` | `'menage'` | `'partenaires'`) and switches between the home sections and the sub-pages manually. `menage` and `partenaires` render an empty `BlankPage` until their content exists — there is no `react-router`. `Navbar` receives `navigate` as a prop and calls it directly; internal home-page navigation (Home/About/Apartments/Contact) uses plain anchor hashes (`#hero`, `#about`, etc.) and `scrollIntoView`, with a special case in `Navbar.handleLink` to first navigate home before scrolling if the user is on a sub-page.
 
 **Home page is a fixed stack of sections** rendered in `App.jsx`: `Hero` → `About` → `ApartmentGrid` → `Contact` → `Footer`. Each section is visually self-contained (own gradients/backgrounds) and animates in with `framer-motion` (`whileInView`/`useInView`), a pattern repeated across every component — follow it for new sections rather than introducing a different animation approach.
 

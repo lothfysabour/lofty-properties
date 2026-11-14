@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Building } from 'lucide-react'
 
 const navLinks = [
-  { label: 'Accueil',       href: '#hero' },
-  { label: 'À propos',      href: '#about' },
-  { label: 'Appartements',  href: '#apartments' },
-  { label: 'Contact',       href: '#contact' },
+  { label: 'Accueil',         href: '#hero' },
+  { label: 'À propos',        href: '#about' },
+  { label: 'Appartements',    href: '#apartments' },
+  { label: 'Service Ménage',  page: 'menage' },
+  { label: 'Partenaires',     page: 'partenaires' },
+  { label: 'Contact',         href: '#contact' },
 ]
 
 export default function Navbar({ navigate, currentPage }) {
@@ -19,12 +21,14 @@ export default function Navbar({ navigate, currentPage }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* If we're on a sub-page, clicking a nav link brings us home first */
-  const handleLink = (href) => {
-    if (currentPage !== 'home') {
+  /* Hash links scroll on the home page. From a sub-page, go home first. */
+  const handleLink = (link) => {
+    if (link.page) {
+      navigate(link.page)
+    } else if (currentPage !== 'home') {
       navigate('home')
       setTimeout(() => {
-        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+        document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' })
       }, 120)
     }
     setMenuOpen(false)
@@ -65,16 +69,20 @@ export default function Navbar({ navigate, currentPage }) {
           </button>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-7">
+          <div className="hidden xl:flex items-center gap-5">
             {navLinks.map((link) => (
               <a
-                key={link.href}
-                href={currentPage === 'home' ? link.href : undefined}
-                onClick={() => handleLink(link.href)}
-                className="relative text-white/60 hover:text-white text-sm font-medium tracking-wide transition-colors duration-300 group cursor-pointer"
+                key={link.label}
+                href={!link.page && currentPage === 'home' ? link.href : undefined}
+                onClick={() => handleLink(link)}
+                className={`relative text-sm font-medium tracking-wide transition-colors duration-300 group cursor-pointer ${
+                  link.page && currentPage === link.page ? 'text-white' : 'text-white/60 hover:text-white'
+                }`}
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-px gradient-miami rounded-full transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute -bottom-1 left-0 h-px gradient-miami rounded-full transition-all duration-300 group-hover:w-full ${
+                  link.page && currentPage === link.page ? 'w-full' : 'w-0'
+                }`} />
               </a>
             ))}
 
@@ -99,7 +107,7 @@ export default function Navbar({ navigate, currentPage }) {
           {/* Hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-white p-2 rounded-xl glass hover:bg-white/10 transition-all"
+            className="xl:hidden text-white p-2 rounded-xl glass hover:bg-white/10 transition-all"
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -114,15 +122,17 @@ export default function Navbar({ navigate, currentPage }) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden glass-dark border-t border-white/8"
+            className="xl:hidden glass-dark border-t border-white/8"
           >
             <div className="px-5 py-6 flex flex-col gap-1">
               {navLinks.map((link) => (
                 <a
-                  key={link.href}
-                  href={currentPage === 'home' ? link.href : undefined}
-                  onClick={() => handleLink(link.href)}
-                  className="text-white/75 hover:text-miami-cyan text-base font-medium transition-colors py-3 border-b border-white/5 last:border-0 cursor-pointer"
+                  key={link.label}
+                  href={!link.page && currentPage === 'home' ? link.href : undefined}
+                  onClick={() => handleLink(link)}
+                  className={`text-base font-medium transition-colors py-3 border-b border-white/5 last:border-0 cursor-pointer ${
+                    link.page && currentPage === link.page ? 'text-white' : 'text-white/75 hover:text-miami-cyan'
+                  }`}
                 >
                   {link.label}
                 </a>
