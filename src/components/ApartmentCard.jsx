@@ -127,7 +127,7 @@ export default function ApartmentCard({ apartment, index }) {
 
           {guestFavorite && (
             <p className="text-[#D4AF37] text-xs font-semibold tracking-wide mb-3">
-              Coup de cœur voyageurs, préféré sur Airbnb
+              Ce logement fait partie des 10 % de logements préférés sur Airbnb
             </p>
           )}
 
