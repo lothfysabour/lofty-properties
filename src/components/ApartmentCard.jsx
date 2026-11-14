@@ -19,6 +19,7 @@ export default function ApartmentCard({ apartment, index }) {
   const fallback = 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800&q=80'
   const badgeGradient = BADGE_STYLES[apartment.badge] || 'from-miami-cyan to-miami-pink'
   const airbnbUrl = apartment.airbnbUrl || '#contact'
+  const guestFavorite = apartment.badge === 'Coup de cœur voyageurs'
 
   return (
     <motion.article
@@ -30,8 +31,14 @@ export default function ApartmentCard({ apartment, index }) {
       className="group relative"
     >
       <div
-        className="glass rounded-2xl overflow-hidden transition-all duration-500 flex flex-col h-full group-hover:border-miami-cyan/20"
-        style={{ boxShadow: '0 4px 32px rgba(0,0,0,0.35)' }}
+        className={`glass rounded-2xl overflow-hidden transition-all duration-500 flex flex-col h-full ${
+          guestFavorite ? 'border-4 border-[#D4AF37]' : 'group-hover:border-miami-cyan/20'
+        }`}
+        style={{
+          boxShadow: guestFavorite
+            ? '0 0 28px rgba(212,175,55,0.28)'
+            : '0 4px 32px rgba(0,0,0,0.35)',
+        }}
       >
         {/* ── Image (clickable) ── */}
         <a
@@ -117,6 +124,12 @@ export default function ApartmentCard({ apartment, index }) {
           >
             {apartment.name}
           </a>
+
+          {guestFavorite && (
+            <p className="text-[#D4AF37] text-xs font-semibold tracking-wide mb-3">
+              Coup de cœur voyageurs, préféré sur Airbnb
+            </p>
+          )}
 
           {/* Description */}
           <p className="text-white/45 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
